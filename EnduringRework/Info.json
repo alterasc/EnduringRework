@@ -1,0 +1,14 @@
+﻿{
+  "AssemblyName": "EnduringRework.dll",
+  "Author": "AlterAsc",
+  "DisplayName": "EnduringRework",
+  "EntryMethod": "EnduringRework.Main.Load",
+  "GameVersion": "2.1.3",
+  "HomePage": "",
+  "Id": "EnduringRework",
+  "ManagerVersion": "0.23.0",
+  "Repository": "",
+  "Requirements": [],
+  "LoadAfter": [ "TabletopTweaks-Reworks" ],
+  "Version": "1.0.0"
+}
