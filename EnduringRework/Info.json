@@ -4,10 +4,10 @@
   "DisplayName": "EnduringRework",
   "EntryMethod": "EnduringRework.Main.Load",
   "GameVersion": "2.1.3",
-  "HomePage": "",
+  "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/497",
   "Id": "EnduringRework",
   "ManagerVersion": "0.23.0",
-  "Repository": "",
+  "Repository": "https://raw.githubusercontent.com/alterasc/EnduringRework/main/Repository.json",
   "Requirements": [],
   "LoadAfter": [ "TabletopTweaks-Reworks" ],
   "Version": "1.0.0"

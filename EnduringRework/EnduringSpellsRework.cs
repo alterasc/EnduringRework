@@ -39,9 +39,9 @@ namespace EnduringRework
             );
             enduringSpells.m_Description = Utils.CreateLocalizedString("AlterAsc.EnduringRework.EnduringSpellsDescription"
                 , "You've learned a way to prolong the effects of your beneficial extended spells.\r\n" +
-                "Benefit: Effects of your spells on your allies cast with extend metamagic applied that should last longer than an hour but shorter than 24 hours now last 24 hours. " +
-                "Effects that should last longer than 10 minutes (but no longer than 1 hour) last 1 hour. " +
-                "Effects that should last longer than 1 minute  (but no longer than 10 minutes) last 10 minutes.");
+                "Benefit: Effects of your spells on your allies cast with extend metamagic applied that should last longer than an hour but shorter than 24 hours now last 24 hours.\r\n" +
+                "Effects that should last longer than 10 minutes (but no longer than 1 hour) last 1 hour.\r\n" +
+                "Effects that should last longer than 1 minute (but no longer than 10 minutes) last 10 minutes.");
 
             var greaterEnduringSpells = Utils.GetBlueprint<BlueprintFeature>("13f9269b3b48ae94c896f0371ce5e23c");
             greaterEnduringSpells.m_Description = Utils.CreateLocalizedString("AlterAsc.EnduringRework.GreaterEnduringSpellsDescription"
