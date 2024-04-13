@@ -1,13 +1,18 @@
-﻿using Kingmaker.Blueprints;
+﻿using HarmonyLib;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.Controllers;
+using Kingmaker.Items;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Buffs;
+using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.Utility;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,9 +44,8 @@ namespace EnduringRework
             );
             enduringSpells.m_Description = Utils.CreateLocalizedString("AlterAsc.EnduringRework.EnduringSpellsDescription"
                 , "You've learned a way to prolong the effects of your beneficial extended spells.\r\n" +
-                "Benefit: Effects of your spells on your allies cast with extend metamagic applied that should last longer than an hour but shorter than 24 hours now last 24 hours.\r\n" +
-                "Effects that should last longer than 10 minutes (but no longer than 1 hour) last 1 hour.\r\n" +
-                "Effects that should last longer than 1 minute (but no longer than 10 minutes) last 10 minutes.");
+                "Benefit: Effects of your spells on your allies cast with extend metamagic applied that should last longer than 1 minute but shorter than 10 minutes last 10 minutes.\r\n" +
+                "Effects that should last longer than 10 minutes but shorter than 1 hour last 1 hour.");
 
             var greaterEnduringSpells = Utils.GetBlueprint<BlueprintFeature>("13f9269b3b48ae94c896f0371ce5e23c");
             greaterEnduringSpells.m_Description = Utils.CreateLocalizedString("AlterAsc.EnduringRework.GreaterEnduringSpellsDescription"
@@ -80,10 +84,6 @@ namespace EnduringRework
                 {
                     buff.MakePermanent();
                 }
-                else
-                {
-                    buff.SetEndTime(24.Hours() + buff.AttachTime);
-                }
             }
             else if (buff.TimeLeft > 10.Minutes())
             {
@@ -97,6 +97,45 @@ namespace EnduringRework
 
         public void HandleBuffDidRemoved(Buff buff)
         {
+        }
+    }
+
+    [HarmonyPatch(typeof(ItemEntity), "AddEnchantment")]
+    [HarmonyAfter("TabletopTweaks-Reworks")]
+    static class ItemEntity_AddEnchantment_EnduringSpells_Patch
+    {
+        private static readonly BlueprintFeature EnduringSpells = Utils.GetBlueprint<BlueprintFeature>("2f206e6d292bdfb4d981e99dcf08153f");
+        private static readonly BlueprintFeature EnduringSpellsGreater = Utils.GetBlueprint<BlueprintFeature>("13f9269b3b48ae94c896f0371ce5e23c");
+
+        [HarmonyPrefix]
+        static bool Prefix(MechanicsContext parentContext, ref Rounds? duration, BlueprintItemEnchantment blueprint)
+        {
+            if (parentContext != null && parentContext.MaybeOwner != null && duration != null)
+            {
+                var abilityData = parentContext.SourceAbilityContext?.Ability;
+                if (abilityData == null || abilityData.Spellbook == null
+                    || abilityData.SourceItem != null || !abilityData.HasMetamagic(Metamagic.Extend))
+                {
+                    return true;
+                }
+                var owner = parentContext.MaybeOwner;
+                if (owner.Descriptor.HasFact(EnduringSpells))
+                {
+                    if (owner.Descriptor.HasFact(EnduringSpellsGreater) && duration > DurationRate.Hours.ToRounds())
+                    {
+                        duration = null;
+                    }
+                    else if (duration > DurationRate.Minutes.ToRounds() * 10 && duration <= DurationRate.Hours.ToRounds())
+                    {
+                        duration = DurationRate.Hours.ToRounds();
+                    }
+                    else if (duration > DurationRate.Minutes.ToRounds() && duration <= DurationRate.Minutes.ToRounds() * 10)
+                    {
+                        duration = DurationRate.Minutes.ToRounds() * 10;
+                    }
+                }
+            }
+            return true;
         }
     }
 }
