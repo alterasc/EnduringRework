@@ -7,7 +7,8 @@ Enduring Spells
 Prerequisite: Metamagic (Extend Spell)
 
 You've learned a way to prolong the effects of your beneficial extended spells.
-Benefit: Effects of your spells on your allies cast with extend metamagic applied that should last longer than an hour but shorter than 24 hours now last 24 hours. Effects that should last longer than 10 minutes (but no longer than 1 hour) last 1 hour. Effects that should last longer than 1 minute  (but no longer than 10 minutes) last 10 minutes.
+Benefit: Effects of your spells on your allies cast with extend metamagic applied that should last longer than 1 minute but shorter than 10 minutes last 10 minutes.
+Effects that should last longer than 10 minutes but shorter than 1 hour last 1 hour.
 ```
 
 Greater Enduring Spells
@@ -21,7 +22,7 @@ Benefit: In addition to existing benefits now effects of your spells on your all
 
 So 1 minute extended spell will stay 1 minute. 1 minute 12 seconds will become 10 minutes.
 
-Cave Fangs, Call Lightning, Call Lightning Storm won't become permanent, at max 1 day. Sorry if you already theorized this.
+Cave Fangs, Call Lightning, Call Lightning Storm won't become permanent. Sorry if you already theorized this.
 
 Does not introduce save dependency, so you can remove it any time.
 
