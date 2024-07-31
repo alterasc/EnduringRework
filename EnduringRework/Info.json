@@ -1,9 +1,9 @@
 ﻿{
   "AssemblyName": "EnduringRework.dll",
   "Author": "AlterAsc",
-  "DisplayName": "EnduringRework",
+  "DisplayName": "Enduring Rework",
   "EntryMethod": "EnduringRework.Main.Load",
-  "GameVersion": "2.1.3",
+  "GameVersion": "2.3.3",
   "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/497",
   "Id": "EnduringRework",
   "ManagerVersion": "0.23.0",

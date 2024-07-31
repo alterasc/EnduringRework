@@ -2,62 +2,39 @@
 using Kingmaker.Blueprints.JsonSystem;
 using UnityModManagerNet;
 
-namespace EnduringRework
+namespace EnduringRework;
+
+#if DEBUG
+[EnableReloading]
+#endif
+public static class Main
 {
-#if DEBUG
-    [EnableReloading]
-#endif
-    static class Main
+    public static UnityModManager.ModEntry ModEntry;
+    public static Harmony HarmonyInstance;
+
+#pragma warning disable IDE0051 // Remove unused private members
+    static bool Load(UnityModManager.ModEntry modEntry)
+#pragma warning restore IDE0051 // Remove unused private members
     {
-        public static bool Enabled;
-        public static UnityModManager.ModEntry ModEntry;
-        static bool Load(UnityModManager.ModEntry modEntry)
+        HarmonyInstance = new Harmony(modEntry.Info.Id);
+        ModEntry = modEntry;
+        HarmonyInstance.CreateClassProcessor(typeof(EntryPatch)).Patch();
+        return true;
+    }
+
+    [HarmonyPatch(typeof(BlueprintsCache), nameof(BlueprintsCache.Init))]
+    internal static class EntryPatch
+    {
+        static bool Initialized;
+
+        [HarmonyPostfix]
+        [HarmonyAfter("TabletopTweaks-Reworks")]
+        static void After_BlueprintsCache_Init()
         {
-            var harmony = new Harmony(modEntry.Info.Id);
-            ModEntry = modEntry;
-            modEntry.OnToggle = OnToggle;
-            modEntry.OnGUI = OnGUI;
-            modEntry.OnSaveGUI = OnSaveGUI;
-#if DEBUG
-            modEntry.OnUnload = OnUnload;
-#endif
-            harmony.PatchAll();
-            return true;
-        }
-        static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
-        {
-            Enabled = value;
-            return true;
-        }
-
-        static bool OnUnload(UnityModManager.ModEntry modEntry)
-        {
-            return true;
-        }
-
-
-        static void OnGUI(UnityModManager.ModEntry modEntry)
-        {
-
-        }
-
-        static void OnSaveGUI(UnityModManager.ModEntry modEntry)
-        {
-
-        }
-
-        [HarmonyPatch(typeof(BlueprintsCache), "Init")]
-        internal static class BlueprintsCache_Init_Patch
-        {
-            static bool Initialized;
-
-            [HarmonyPostfix]
-            static void Postfix()
-            {
-                if (Initialized) return;
-                Initialized = true;
-                EnduringSpellsRework.UpdateEnduringSpellsMythicAbility();
-            }
+            if (Initialized) return;
+            Initialized = true;
+            EnduringSpellsRework.UpdateEnduringSpellsMythicAbility();
+            HarmonyInstance.CreateClassProcessor(typeof(ItemEntity_AddEnchantment_EnduringSpells_Patch)).Patch();
         }
     }
 }
